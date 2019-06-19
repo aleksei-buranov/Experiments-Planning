@@ -1,0 +1,302 @@
+unit MainForm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls, Grids;
+
+type
+  TForm1 = class(TForm)
+    StringGrid1: TStringGrid;
+    RadioGroup1: TRadioGroup;
+    LevelsEdit: TEdit;
+    Label1: TLabel;
+    ComboBox1: TComboBox;
+    Label2: TLabel;
+    FactorsEdit: TEdit;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    CheckBox1: TCheckBox;
+    ComboBox2: TComboBox;
+    RangeEdit: TEdit;
+    Button1: TButton;
+    Label3: TLabel;
+    ComboBox3: TComboBox;
+    procedure FactorsEditKeyPress(Sender: TObject; var Key: Char);
+    procedure RadioGroup1Click(Sender: TObject);
+    procedure ComboBox1Select(Sender: TObject);
+    procedure LevelsEditKeyPress(Sender: TObject; var Key: Char);
+    procedure ComboBox3Select(Sender: TObject);
+    procedure ComboBox2Select(Sender: TObject);
+    procedure RangeEditKeyPress(Sender: TObject; var Key: Char);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  ints:array of array of real;
+  plan:byte;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.Button1Click(Sender: TObject);
+var N,NI,k,i,j,z:integer; ii:array of integer; flag:boolean; str:string;
+begin
+  k:=length(ints)-1;
+  setlength(ii,length(ints));
+  NI:=1;
+  stringgrid1.ColCount:=length(ints)+1;
+  StringGrid1.Cells[0,0]:='№ эксперимента';
+  for I := 0 to k do
+    stringgrid1.Cells[i+1,0]:=inttostr(i+1)+'-й фактор';
+  if plan=2 then dec(k);
+  case plan of
+    1:begin
+      str:=inputbox('Случайная генерация',
+      'Введите количество экспериментов N = ','');
+      val(str,N,j);
+      if (j<>0) or (N<=0) then
+      begin
+        showmessage('Введите положительное число (больше 0)!');
+        exit;
+      end;
+      stringGrid1.RowCount:=N+1;
+      for j := 1 to N do begin
+        for i := 0 to k do
+        begin
+          stringgrid1.Cells[0,j]:=inttostr(j);
+          stringgrid1.Cells[i+1,j]:=floattostrf(random*(ints[i][1]-ints[i][0])
+          +ints[i][0],fffixed,7,2);
+        end;
+      end;
+    end;//1 inputbox
+
+    3:begin
+      N:=0;
+      for i:=0 to k do N:=N+length(ints[i]);
+      stringGrid1.RowCount:=N+1;
+      for I := 0 to length(ints)-1 do
+        for j := 0 to length(ints[i])-1 do
+        begin
+          ii[0]:=0;
+          while ii[0]<length(ints) do
+          begin
+            stringgrid1.Cells[0,NI]:=inttostr(NI);
+            if ii[0]=i then stringgrid1.Cells[ii[0]+1,NI]:=floattostr(ints[i][j])
+            else stringgrid1.Cells[ii[0]+1,NI]:=floattostr(
+              abs(ints[ii[0]][0]+ints[ii[0]][length(ints[ii[0]])-1])/2);
+            inc(ii[0]);
+          end;
+          inc(NI);
+        end;
+    end;//3
+
+    else begin
+      N:=1;
+      for i := 0 to k do N:=N*length(ints[i]);
+      stringGrid1.RowCount:=N+1;
+
+      if plan=0 then
+      begin
+        while ii[0]<length(ints[0]) do
+        begin
+          flag:=false;
+          for I := 1 to k do
+              if ii[i]=length(ints[i]) then
+              begin
+                inc(ii[i-1]);
+                for j := i to k do ii[j]:=0;
+                flag:=true;
+                break;
+              end;
+          if flag then continue;
+          while ii[k]<length(ints[k]) do
+          begin
+            for j := 0 to k do
+                stringgrid1.Cells[j+1,NI]:=floattostrf(ints[j,ii[j]],fffixed,7,2);
+            stringgrid1.Cells[0,NI]:=inttostr(NI);
+            inc(ii[k]);
+            inc(NI);
+          end;
+        end;
+      end;//0
+
+      if plan=2 then
+      begin
+        for I := 0 to length(ints[0])-1 do
+        begin
+          ii[0]:=ii[1];
+          for j := 0 to length(ints[0])-1 do
+          begin
+            stringgrid1.Cells[0,NI]:=inttostr(NI);
+            stringgrid1.Cells[1,NI]:=floattostr(ints[0][i]);
+            stringgrid1.Cells[2,NI]:=floattostr(ints[1][j]);
+            stringgrid1.Cells[3,NI]:=floattostr(ints[2][ii[0]]);
+            if ii[0]=length(ints[0])-1 then ii[0]:=0
+              else inc(ii[0]);
+            inc(NI);
+          end;
+          inc(ii[1]);
+        end;
+      end;//2
+
+      if plan=4 then
+      begin
+        for I := 0 to N-1 do
+        begin
+          for j := length(ints) - 1 downto 0 do
+          begin
+            stringgrid1.Cells[0,I+1]:=inttostr(I+1);
+            if ii[j]=1 then stringgrid1.Cells[j+1,I+1]:=floattostr(ints[j][1])
+            else stringgrid1.Cells[j+1,I+1]:=floattostr(ints[j][0]);
+          end;
+          inc(ii[length(ints)-1]);
+          for z := length(ints) - 1 downto 1 do
+            if (ii[z]=2) then begin  ii[z]:=0; inc(ii[z-1]) end;
+        end;
+      end;//4
+
+    end;//else
+  end;//case
+end;//proc
+
+procedure TForm1.ComboBox1Select(Sender: TObject);
+var ent:char;
+begin
+  LevelsEdit.Enabled:=true;
+  if plan=4 then begin
+    LevelsEdit.ReadOnly:=true;
+    LevelsEdit.Text:='2';
+    ent:=#13;
+    LevelsEditKeyPress(self,ent);
+  end;
+  LevelsEdit.Text:=inttostr(length(ints[ComboBox1.ItemIndex]));
+end;
+
+procedure TForm1.ComboBox2Select(Sender: TObject);
+begin
+  RangeEdit.Enabled:=true;
+  RangeEdit.Text:=floattostr(ints[ComboBox3.ItemIndex][ComboBox2.ItemIndex]);
+end;
+
+procedure TForm1.ComboBox3Select(Sender: TObject);
+var i:integer;
+begin
+  ComboBox2.Enabled:=true;
+  ComboBox2.Items.Clear;
+  for I := 0 to length(ints[ComboBox3.ItemIndex])-1 do
+    ComboBox2.Items.Add('Уровень '+inttostr(i+1));
+  ComboBox2.ItemIndex:=0;
+end;
+
+procedure TForm1.LevelsEditKeyPress(Sender: TObject; var Key: Char);
+var i:integer; same:boolean;
+begin
+  same:=false;
+  if (plan=2) or (plan=4) then same:=true;
+  case Key of
+    '0'..'9',Chr(8):;
+    Chr(13): if (length(LevelsEdit.Text)=0) or (strtoint(LevelsEdit.Text)=0)
+      then showmessage('Введите количество уровней (целое число > 0)')
+      else
+      begin
+        setlength(ints[ComboBox1.ItemIndex],strtoint(LevelsEdit.Text));
+        for I := 0 to length(ints)-1 do
+          if (i<>ComboBox1.ItemIndex) and ((same) or (length(ints[i])=0))
+            then setlength(ints[i],length(ints[ComboBox1.ItemIndex]));
+        if(plan<>1)and(plan<>4) then
+        CheckBox1.Enabled:=true else CheckBox1.Enabled:=false;
+      end;
+    else
+    Key:=Chr(0);
+  end;
+end;
+
+procedure TForm1.FactorsEditKeyPress(Sender: TObject; var Key: Char);
+var i:integer;
+begin
+  case Key of
+    '0'..'9',Chr(8):;
+    Chr(13): if (length(FactorsEdit.Text)=0) or (strtoint(FactorsEdit.Text)=0)
+      then showmessage('Введите количество факторов (целое число > 0)')
+      else begin
+        ComboBox1.Enabled:=true;
+        ComboBox1.Items.Clear;
+        ComboBox3.Enabled:=true;
+        ComboBox3.Items.Clear;
+        setlength(ints,strtoint(FactorsEdit.Text));
+         for i := 0 to strtoint(FactorsEdit.Text)-1 do
+         begin
+            ComboBox1.Items.Add('Фактор '+inttostr(i+1));
+            ComboBox3.Items.Add('Фактор '+inttostr(i+1));
+         end;
+        ComboBox1.ItemIndex:=0;
+        ComboBox3.ItemIndex:=0;
+      end
+    else
+    Key:=Chr(0);
+  end;
+end;
+
+procedure TForm1.RadioGroup1Click(Sender: TObject);
+var ent:char;
+begin
+  Form1.Close;
+  Application.CreateForm(TForm1, Form1);
+  FactorsEdit.Enabled:=true;
+  Plan:=RadioGroup1.ItemIndex;
+  case plan of
+    1,4:begin
+      showmessage(RadioGroup1.Items[plan]+
+      ' план не располагает редактированием промежуточных значений');
+    end;//1
+
+    2:begin
+      showmessage(RadioGroup1.Items[plan]+
+      ' имеет ограничение количества факторов (3)');
+      FactorsEdit.ReadOnly:=true;
+      FactorsEdit.Text:='3';
+      ent:=#13;
+      FactorsEditKeyPress(self,ent);
+    end;//2
+
+  end;//case
+
+end;//proc
+
+procedure TForm1.RangeEditKeyPress(Sender: TObject; var Key: Char);
+var compos:byte;
+begin
+  case Key of
+    '0'..'9',Chr(8):;
+    '.':begin
+      Key:=',';
+      RangeEditKeyPress(Self,key);
+    end;
+    ',':begin
+      compos:=pos(',',RangeEdit.Text);
+      if(compos<>0) or ((compos=0) and (length(RangeEdit.Text)=0))
+        then Key:=Chr(0);
+    end;
+    Chr(13):
+    begin
+      if (length(RangeEdit.Text)=0) then begin
+        showmessage('Вы ничего не ввели!');
+        exit;
+      end;
+      ints[ComboBox3.ItemIndex,ComboBox2.ItemIndex]:=strtofloat(RangeEdit.Text);
+      Button1.Enabled:=true;
+    end;
+    else
+    Key:=Chr(0);
+  end;
+end;
+
+end.

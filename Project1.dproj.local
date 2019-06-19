@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2019.05.21 15:02:11.323.pas,C:\Users\BuranovAN\Documents\RAD Studio\Projects\Unit1.pas=C:\Users\BuranovAN\Documents\RAD Studio\Projects\MainForm.pas</Transaction>
+    <Transaction>2019.05.21 15:02:11.339.dfm,C:\Users\BuranovAN\Documents\RAD Studio\Projects\Unit1.dfm=C:\Users\BuranovAN\Documents\RAD Studio\Projects\MainForm.dfm</Transaction>
+    <Transaction>2019.05.21 15:03:39.481.pas,C:\Users\BuranovAN\Documents\RAD Studio\Projects\MainForm.pas=S:\ComputerModeling\Modeling - CourseWork\Program\MainForm.pas</Transaction>
+    <Transaction>2019.05.21 15:03:39.481.dfm,C:\Users\BuranovAN\Documents\RAD Studio\Projects\MainForm.dfm=S:\ComputerModeling\Modeling - CourseWork\Program\MainForm.dfm</Transaction>
+    <Transaction>2019.05.21 15:03:41.117.dproj,C:\Users\BuranovAN\Documents\RAD Studio\Projects\Project1.dproj=S:\ComputerModeling\Modeling - CourseWork\Program\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
