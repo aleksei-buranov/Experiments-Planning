@@ -17,6 +17,7 @@ object Form1: TForm1
   OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -24,23 +25,25 @@ object Form1: TForm1
     Top = 143
     Width = 222
     Height = 114
+    BevelKind = bkTile
+    BevelOuter = bvNone
     TabOrder = 2
     object Label2: TLabel
-      Left = 59
-      Top = 52
+      Left = 55
+      Top = 49
       Width = 109
       Height = 13
       Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1091#1088#1086#1074#1085#1077#1081':'
     end
     object Label1: TLabel
-      Left = 12
+      Left = 10
       Top = 17
       Width = 117
       Height = 13
       Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1092#1072#1082#1090#1086#1088#1086#1074':'
     end
     object FactorsEdit: TEdit
-      Left = 131
+      Left = 129
       Top = 17
       Width = 80
       Height = 21
@@ -49,16 +52,16 @@ object Form1: TForm1
       OnKeyPress = FactorsEditKeyPress
     end
     object LevelsEdit: TEdit
-      Left = 122
+      Left = 116
       Top = 75
-      Width = 80
-      Height = 21
+      Width = 88
+      Height = 22
       Enabled = False
       TabOrder = 1
       OnKeyPress = LevelsEditKeyPress
     end
     object ComboBox1: TComboBox
-      Left = 19
+      Left = 13
       Top = 75
       Width = 97
       Height = 22
@@ -77,11 +80,15 @@ object Form1: TForm1
     Top = 8
     Width = 553
     Height = 441
+    BevelInner = bvNone
+    ColCount = 2
+    DefaultColWidth = 95
     FixedCols = 0
-    RowCount = 1
-    FixedRows = 0
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect]
+    RowCount = 2
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goRowSelect, goThumbTracking]
     TabOrder = 0
+    OnMouseWheelDown = StringGrid1MouseWheelDown
+    OnMouseWheelUp = StringGrid1MouseWheelUp
   end
   object RadioGroup1: TRadioGroup
     Left = 576
@@ -104,17 +111,19 @@ object Form1: TForm1
     Top = 263
     Width = 222
     Height = 114
+    BevelKind = bkTile
+    BevelOuter = bvNone
     TabOrder = 3
     object Label3: TLabel
-      Left = 16
+      Left = 13
       Top = 48
       Width = 79
       Height = 13
       Caption = #1042#1074#1086#1076' '#1079#1085#1072#1095#1077#1085#1080#1081':'
     end
     object CheckBox1: TCheckBox
-      Left = 11
-      Top = 14
+      Left = 8
+      Top = 11
       Width = 201
       Height = 28
       Caption = #1055#1088#1086#1084#1077#1078#1091#1090#1086#1095#1085#1099#1077' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1074#1088#1091#1095#1085#1091#1102
@@ -123,8 +132,8 @@ object Form1: TForm1
       OnClick = CheckBox1Click
     end
     object ComboBox2: TComboBox
-      Left = 20
-      Top = 78
+      Left = 13
+      Top = 77
       Width = 97
       Height = 22
       Style = csOwnerDrawFixed
@@ -137,16 +146,16 @@ object Form1: TForm1
         #1059#1088#1086#1074#1077#1085#1100' j')
     end
     object RangeEdit: TEdit
-      Left = 123
-      Top = 78
-      Width = 80
+      Left = 116
+      Top = 77
+      Width = 89
       Height = 22
       Enabled = False
       TabOrder = 2
       OnKeyPress = RangeEditKeyPress
     end
     object ComboBox3: TComboBox
-      Left = 101
+      Left = 98
       Top = 45
       Width = 108
       Height = 22
