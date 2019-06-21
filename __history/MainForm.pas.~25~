@@ -36,12 +36,12 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button2Click(Sender: TObject);
     procedure UpdateCmb(SenderCmb:TComboBox;N:integer;Str:string);
+    procedure CheckBox1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StringGrid1MouseWheelUp(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; var Handled: Boolean);
     procedure StringGrid1MouseWheelDown(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; var Handled: Boolean);
-    procedure CheckBox1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -215,13 +215,19 @@ end;
 
 procedure TForm1.CheckBox1Click(Sender: TObject);
 begin
-  if True then
-
   Form1.ComboBox3Select(ComboBox3);
 end;
 
 procedure TForm1.ComboBox1Select(Sender: TObject);
+var ent:char;
 begin
+  if not levelsEdit.Enabled then LevelsEdit.Enabled:=true;
+  if (plan=4) or (plan=1) then begin
+    LevelsEdit.ReadOnly:=true;
+    LevelsEdit.Text:='2';
+    ent:=#13;
+    LevelsEditKeyPress(LevelsEdit,ent);
+  end;
   LevelsEdit.Text:=inttostr(length(ints[ComboBox1.ItemIndex]));
 end;
 
@@ -239,7 +245,7 @@ end;
 
 procedure TForm1.ComboBox3Select(Sender: TObject);
 begin
-  if (length(ints[ComboBox3.ItemIndex])=1)or(Checkbox1.Checked) then
+  if Checkbox1.Checked then
     UpdateCmb(ComboBox2,length(ints[ComboBox3.ItemIndex]),'Уровень')
   else
   begin
@@ -256,11 +262,11 @@ procedure TForm1.LevelsEditKeyPress(Sender: TObject; var Key: Char);
 var i:integer; same:boolean;
 begin
   same:=false;
-  if (plan=2) or (plan=4) or (plan=1) then same:=true;
+  if (plan=2) or (plan=4) then same:=true;
   case Key of
     '0'..'9',Chr(8):;
-    Chr(13): if (length(LevelsEdit.Text)=0) or (strtoint(LevelsEdit.Text)<1)
-      then showmessage('Введите количество уровней (целое число > 1)')
+    Chr(13): if (length(LevelsEdit.Text)=0) or (strtoint(LevelsEdit.Text)=0)
+      then showmessage('Введите количество уровней (целое число > 0)')
       else
       begin
         setlength(ints[ComboBox1.ItemIndex],strtoint(LevelsEdit.Text));
@@ -269,6 +275,7 @@ begin
             then setlength(ints[i],length(ints[ComboBox1.ItemIndex]));
         if(plan<>1)and(plan<>4) then
         CheckBox1.Enabled:=true else CheckBox1.Enabled:=false;
+        ComboBox3.Enabled:=true;
         Form1.CheckBox1Click(CheckBox1);
       end;
     else
@@ -277,7 +284,6 @@ begin
 end;
 
 procedure TForm1.FactorsEditKeyPress(Sender: TObject; var Key: Char);
-var ent:char;
 begin
   case Key of
     '0'..'9',Chr(8):;
@@ -287,15 +293,7 @@ begin
         setlength(ints,strtoint(FactorsEdit.Text));
         UpdateCmb(ComboBox1,length(ints),'Фактор');
         UpdateCmb(ComboBox3,length(ints),'Фактор');
-        LevelsEdit.Enabled:=ComboBox1.Enabled;
-        if (plan=4) or (plan=1) then begin
-          LevelsEdit.ReadOnly:=true;
-          LevelsEdit.Text:='2';
-        end
-        else
-        LevelsEdit.Text:='1';
-        ent:=#13;
-        LevelsEditKeyPress(LevelsEdit,ent);
+        ComboBox3.Enabled:=false;
       end
     else
     Key:=Chr(0);
